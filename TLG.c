@@ -99,7 +99,7 @@ TLC allocWord(char *str)
     }  
 
     newWord->aparitii = 1;
-    newWord->cuv = (char*)malloc(strlen(str) * sizeof(char));
+    newWord->cuv = (char*)malloc((strlen(str) + 1) * sizeof(char));
     strcpy(newWord->cuv, str);
     newWord->urm = NULL;
 
@@ -135,4 +135,37 @@ int searchWord(TLG L, char *str, int len)
     }
 
     return 0;
+}
+
+void freeTCelulaC(TLC L)
+{
+    free(L->cuv);
+    free(L);
+}
+
+void freeTCelulaG(TLG L)
+{
+    freeTLC((TLC)L->info);
+    free(L);
+}
+
+void freeTLC(TLC L)
+{
+    while (L) {
+        TLC aux = L;
+        L = L->urm;
+
+        freeTCelulaC(aux);
+    }
+}
+
+void freeTLG(TLG L)
+{
+    while (L) {
+        TLG aux = L;
+        L = L->urm;
+
+        freeTLC((TLC)aux->info);
+        free(aux);
+    }
 }

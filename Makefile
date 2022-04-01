@@ -1,5 +1,5 @@
 build:
-	gcc -g -o out main.c THash.c TLG.c
+	gcc -g -o tema1 main.c THash.c TLG.c
 
 run: build
 	./out

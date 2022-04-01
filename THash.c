@@ -38,3 +38,15 @@ int insertWords(TH* h, char *str)
 
     return 0;
 }
+
+void deleteTH(TH* h)
+{
+    for (int i = 0; i < h->M; ++i) {
+        if (h->v[i]) {
+            freeTLG(h->v[i]);
+        }
+    }
+
+    free(h->v);
+    free(h);
+}

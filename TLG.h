@@ -22,3 +22,7 @@ TLG searchLen(TLG L, int len);
 int searchWord(TLG L, char *str, int len);
 TLG allocCell(int len);
 int addCell(TLG *aL, TLG newCell);
+void freeTLG(TLG L);
+void freeTLC(TLC L);
+void freeTCelulaG(TLG L);
+void freeTCelulaC(TLC L);

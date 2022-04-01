@@ -54,5 +54,7 @@ int main()
 
     Afisare(h);
 
+    deleteTH(h);
+
     return 0;
 }

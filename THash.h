@@ -10,3 +10,4 @@ typedef struct thash {
 
 TH* initTH(int M, TFHash fp);
 int insertWords(TH* h, char *str);
+void deleteTH(TH* h);
