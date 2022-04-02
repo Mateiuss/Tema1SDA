@@ -9,5 +9,6 @@ typedef struct thash {
 } TH;
 
 TH* initTH(int M, TFHash fp);
-int insertWords(TH* h, char *str);
+void sortTH(TH *h, int (*cmp)(void*, void*));
+int insertWords(TH* h, char *str, int (*cod)(void*));
 void deleteTH(TH* h);

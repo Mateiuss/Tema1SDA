@@ -33,6 +33,7 @@ int insertWord(TLG *aL, char *str)
 
     TLG newCell = allocCell(len);
     if (!newCell) {
+        freeTCelulaC(newWord);
         return 0;
     }
 
@@ -43,11 +44,11 @@ int insertWord(TLG *aL, char *str)
     return 1;
 }
 
-int addCell(TLG *aL, TLG newCell)
+void addCell(TLG *aL, TLG newCell)
 {
     if (!(*aL)) {
         *aL = newCell;
-        return 1;
+        return ;
     }
 
     TLG ant, p, rez;
@@ -65,19 +66,17 @@ int addCell(TLG *aL, TLG newCell)
 
     if (!p) {
         ant->urm = newCell;
-        return 1;
+        return ;
     }
 
     if (!ant) {
         newCell->urm = *aL;
         *aL = newCell;
-        return 1;
+        return ;
     }
 
     newCell->urm = ant->urm;
     ant->urm = newCell;
-
-    return 1;
 }
 
 TLG allocCell(int len)
@@ -96,12 +95,20 @@ TLC allocWord(char *str)
     TLC newWord = (TLC)malloc(sizeof(TCelulaC));
     if (!newWord) {
         return NULL;
-    }  
+    }
 
-    newWord->aparitii = 1;
-    newWord->cuv = (char*)malloc((strlen(str) + 1) * sizeof(char));
-    strcpy(newWord->cuv, str);
+    TLCuvant *info = (TLCuvant*)malloc(sizeof(TLCuvant));
+    if (!info) {
+        free(newWord);
+        return NULL;
+    }
+
+    info->aparitii = 1;
+    info->cuv = (char*)malloc((strlen(str) + 1) * sizeof(char));
+    strcpy(info->cuv, str);
+
     newWord->urm = NULL;
+    newWord->info = (void*)info;
 
     return newWord;
 }
@@ -126,8 +133,9 @@ int searchWord(TLG L, char *str, int len)
         if (p->len == len) {
             TLC q = (TLC)p->info;
             for (; q != NULL; q = q->urm) {
-                if (!strcmp(q->cuv, str)) {
-                    ++q->aparitii;
+                TLCuvant *info = (TLCuvant*)q->info;
+                if (!strcmp(info->cuv, str)) {
+                    ++info->aparitii;
                     return 1;
                 }
             }
@@ -137,9 +145,25 @@ int searchWord(TLG L, char *str, int len)
     return 0;
 }
 
+void sortTLC(TLC L, int (*cmp)(void*, void*))
+{
+    TLC p = L, q;
+
+    for (; p != NULL; p = p->urm) {
+        for (q = p->urm; q != NULL; q = q->urm) {
+            if (cmp((void*)p, (void*)q)) {
+                void * aux = p->info;
+                p->info = q->info;
+                q->info = aux;
+            }
+        }
+    }
+}
+
 void freeTCelulaC(TLC L)
 {
-    free(L->cuv);
+    free(((TLCuvant*)L->info)->cuv);
+    free(L->info);
     free(L);
 }
 

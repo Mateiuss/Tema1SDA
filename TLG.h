@@ -9,20 +9,24 @@ typedef struct celulag {
     struct celulag *urm;
 } TCelulaG, *TLG;
 
+typedef struct celulac {
+    void *info;
+    struct celulac *urm;
+} TCelulaC, *TLC;
+
 typedef struct cuvant {
     int aparitii;
     char *cuv;
-    struct cuvant *urm;
-}TCelulaC, *TLC;
-
+} TLCuvant;
 
 int insertWord(TLG *aL, char *str);
 TLC allocWord(char *str);
 TLG searchLen(TLG L, int len);
 int searchWord(TLG L, char *str, int len);
 TLG allocCell(int len);
-int addCell(TLG *aL, TLG newCell);
+void addCell(TLG *aL, TLG newCell);
 void freeTLG(TLG L);
 void freeTLC(TLC L);
 void freeTCelulaG(TLG L);
 void freeTCelulaC(TLC L);
+void sortTLC(TLC L, int (*cmp)(void*, void*));
