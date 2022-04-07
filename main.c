@@ -41,7 +41,7 @@ void Afisare1(TH *h)
 {
     for (int i = 0; i < h->M; ++i) {
         if (h->v[i]) {
-            printf("pos%d: ", i);
+            printf("pos %d: ", i);
             for (TLG p = h->v[i]; p != NULL; p = p->urm) {
                 printf("(%d:", p->len);
                 
@@ -53,7 +53,7 @@ void Afisare1(TH *h)
                         printf("%s/%d, ", info->cuv, info->aparitii);
                     }
                 }
-                printf(") ");
+                printf(")");
             }
             printf("\n");
         }
@@ -106,7 +106,7 @@ void Afisare3(TH *h, int aparitii)
 
                         if (!showLen) {
                             showLen = 1;
-                            printf("(%d:", p->len);
+                            printf("(%d: ", p->len);
                         }
 
                         printf("%s/%d", info->cuv, info->aparitii);
@@ -116,7 +116,7 @@ void Afisare3(TH *h, int aparitii)
                 }
 
                 if (showLen == 1) {
-                    printf(") ");
+                    printf(")");
                 }
             }
 
@@ -127,8 +127,10 @@ void Afisare3(TH *h, int aparitii)
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+    FILE *fp = fopen(argv[1], "r");
+
     int M = 'z' - 'a' + 1;
     TH *h = initTH(M, codHash);
     if (!h)
@@ -139,18 +141,18 @@ int main()
     
     char command[MAX];
 
-    while (fgets(command, MAX, stdin)) {
+    while (fgets(command, MAX, fp)) {
         int printed = 0;
 
         addNull(command);
 
         if (strstr(command, "insert")) {
             printed = 0;
-
             if(!insertWords(h, command, codHash)) {
-                deleteTH(h);
+                printf("Nu s-au putut insera cuvintele in tabela!\n");
                 return -1;
             }
+
         } else if (strstr(command, "print")) {
             if (printed == 0) {
                 sortTH(h, compCuv);
@@ -159,12 +161,12 @@ int main()
             if (!strcmp(command, "print")) {
                 Afisare1(h);
             } else {
-                char *parser = strtok(command, " ");
-                parser = strtok(NULL, " ");
+                char *parser = strtok(command, " .,");
+                parser = strtok(NULL, " ,.");
 
                 if (isalpha(*parser)) {
                     char c = *parser;
-                    parser = strtok(NULL, " ");
+                    parser = strtok(NULL, " ,.");
                     int len = atoi(parser);
 
                     Afisare2(h, codHash((void*)&c), len);
@@ -178,6 +180,7 @@ int main()
     }
 
     deleteTH(h);
+    fclose(fp);
 
     return 0;
 }

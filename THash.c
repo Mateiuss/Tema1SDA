@@ -22,8 +22,8 @@ TH* initTH(int M, TFHash fp)
 int insertWords(TH* h, char *str, int (*cod)(void*))
 {
     int c;
-    char *parser = strtok(str, " .,-");
-    parser = strtok(NULL, " .,-");
+    char *parser = strtok(str, " .,");
+    parser = strtok(NULL, " .,");
 
     while (parser) {
         if (strlen(parser) >= 3) {
@@ -31,16 +31,12 @@ int insertWords(TH* h, char *str, int (*cod)(void*))
                 int succes = insertWord(&h->v[c], parser);
 
                 if (!succes) {
-                    printf("Inserarea nu s-a facut cu succes!\n");
                     return 0;
                 }
-            } else {
-                printf("Cuvantul nu incepe cu o litera!\n");
-                return 0;
             }
         }
 
-        parser = strtok(NULL, " .,-");
+        parser = strtok(NULL, " .,");
     }
 
     return 1;
