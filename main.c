@@ -1,6 +1,8 @@
+/*DUDU Matei-Ioan - 313CB*/
 #include "THash.h"
 #define MAX 100
 
+// Functie ce adauga '\0' in locul '\n' de la sfarsitul unui sir
 void addNull(char *str)
 {
     if (str[strlen(str) - 1] == '\n') {
@@ -8,6 +10,7 @@ void addNull(char *str)
     }
 }
 
+// Functie care genereaza codul hash
 int codHash (void *element)
 {
     char c = *(char*)element;
@@ -21,6 +24,8 @@ int codHash (void *element)
     return -1; 
 }
 
+// Functie de comparare a doua cuvinte, utilizata fiind la sortarea listei
+// de cuvinte
 int compCuv(void *e1, void *e2)
 {
     TLCuvant *a = (TLCuvant*)((TLC)e1)->info;
@@ -37,9 +42,10 @@ int compCuv(void *e1, void *e2)
     return 0;
 }
 
+// Urmatoarele trei functii sunt pentru cele trei tipuri de afisari cerute
 void Afisare1(TH *h)
 {
-    for (int i = 0; i < h->M; ++i) {
+    for (int i = 0; i <= h->M; ++i) {
         if (h->v[i]) {
             printf("pos %d: ", i);
             for (TLG p = h->v[i]; p != NULL; p = p->urm) {
@@ -85,7 +91,7 @@ void Afisare2(TH *h, int poz, int len)
 
 void Afisare3(TH *h, int aparitii)
 {
-    for (int i = 0; i < h->M; ++i) {
+    for (int i = 0; i <= h->M; ++i) {
         if (h->v[i]) {
             int showPoz = 0;
             for (TLG p = h->v[i]; p != NULL; p = p->urm) {
@@ -131,7 +137,7 @@ int main(int argc, char *argv[])
 {
     FILE *fp = fopen(argv[1], "r");
 
-    int M = 'z' - 'a' + 1;
+    int M = 'z' - 'a';
     TH *h = initTH(M, codHash);
     if (!h)
     {

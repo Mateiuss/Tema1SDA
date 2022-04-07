@@ -1,19 +1,25 @@
+/*DUDU Matei-Ioan - 313CB*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 
+// Structura pentru celula ce contine void pointer la lista de cuvinte
+// si lungimea comuna a acestora
 typedef struct celulag {
     void *info;
     int len;
     struct celulag *urm;
 } TCelulaG, *TLG;
 
+// Structura pentru celula ce contine un void pointer la informatiile
+// despre cuvant
 typedef struct celulac {
     void *info;
     struct celulac *urm;
 } TCelulaC, *TLC;
 
+// Structura ce contine informatiile despre cuvant
 typedef struct cuvant {
     int aparitii;
     char *cuv;

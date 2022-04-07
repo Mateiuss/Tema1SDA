@@ -1,36 +1,42 @@
+/*DUDU Matei-Ioan - 313CB*/
 #include "TLG.h"
-
 
 // Caut daca exista deja cuvantul. Daca exista, ii incrementez aparitiile.
 // Daca nu exista, caut daca mai exista cuvinte de lungimea lui, daca exista
 // doar il adaug in lista deja existenta. Daca nu exista nici cuvinte de lungimea
 // lui, creez lista cu lungimea aferenta si adaug cuvantul.
 int insertWord(TLG *aL, char *str)
-{ // TODO: sa fac free-urile necesare pentru alocari nereusite
+{
     int len = strlen(str);
 
-    // Caut daca exista cuvantul, daca exista il incrementez
+    // Caut daca exista cuvantul, daca exista il incrementez direct in 
+    // interiorul functiei "searchWord"
     if (searchWord(*aL, str, len)) {
         return 1;
     }
 
-    // Aloc o celula pentru noul cuvant, in cazul in care trebuie adaugat
+    // Aloc o celula pentru noul cuvant, in cazul in care cuvantul
+    // nu a fost gasit
     TLC newWord = allocWord(str);
     if (!newWord) {
         return 0;
     }
 
+    // Caut daca exista lista cu cuvinte de aceeasi lungime ca a cunvatului
+    // pe care doresc sa il introduc. Daca exista, il inserez in acea lista
     TLG poz = searchLen(*aL, len);
     if (poz) {
         TLC wL = (TLC)poz->info;
 
-        for (; wL->urm != NULL; wL = wL->urm);
-
-        wL->urm = newWord;
+        newWord->urm = wL;
+        poz->info = newWord;
 
         return 1;
     }
 
+    // In cazul in care nu am gasit lista cu cuvinte de aceeasi lungimea ca
+    // a cuvantului pe care doresc sa il inserez creez o noua celula pentru
+    // aceasta
     TLG newCell = allocCell(len);
     if (!newCell) {
         freeTCelulaC(newWord);
@@ -39,19 +45,25 @@ int insertWord(TLG *aL, char *str)
 
     newCell->info = newWord;
 
+    // Adaug noua celula in vectorul din tabela hash pe pozitia corespunzatoare
     addCell(aL, newCell);
 
     return 1;
 }
 
+// Functie de adaugare a unei celule pentru in lista corespunzatoare literei
+// cu care incepe cuvantul. Totodata, adaug celula in ordine crescatoare dupa
+// lungimea cu care incep cuvintele din aceasta, astfel, nemaifiind necesara
+// o sortare ulterioara.
 void addCell(TLG *aL, TLG newCell)
 {
+    // Daca lista este vida, adaug celula ca prim element
     if (!(*aL)) {
         *aL = newCell;
         return ;
     }
 
-    TLG ant, p, rez;
+    TLG ant, p;
 
     int antLen = 2, len = newCell->len;
 
@@ -59,26 +71,31 @@ void addCell(TLG *aL, TLG newCell)
         int currLen = p->len;
 
         if (len > antLen && len < currLen) {
-            rez = ant;
             break;
         }
     }
 
+    // Daca p == NULL inseamna ca celula trebuie adaugata la sfarsit
     if (!p) {
         ant->urm = newCell;
         return ;
     }
 
+    // Daca ant == NULL inseamna ca celula trebuie adaugata la inceput
     if (!ant) {
         newCell->urm = *aL;
         *aL = newCell;
         return ;
     }
 
+    // Altfel, celula este adaugata undeva in interiorul listei, intre cele
+    // doua celule care au cuvinte de lungime mai mica, respectiv mai mare
+    // fata de lungimea cuvintelor continute in noua celula
     newCell->urm = ant->urm;
     ant->urm = newCell;
 }
 
+// Functie de alocare a unei celule ce va contine numai cuvinte de lungime len
 TLG allocCell(int len)
 {
     TLG aux = (TLG)malloc(sizeof(TCelulaG));
@@ -88,8 +105,11 @@ TLG allocCell(int len)
 
     aux->info = aux->urm = NULL;
     aux->len = len;
+
+    return aux;
 }
 
+// Functie de alocare a unei celule ce va contine informatiile despre cuvant
 TLC allocWord(char *str)
 {
     TLC newWord = (TLC)malloc(sizeof(TCelulaC));
@@ -113,6 +133,9 @@ TLC allocWord(char *str)
     return newWord;
 }
 
+// Functie de cautare a unei celule ce contine cuvinte de lungime len.
+// In cazul in care a fost gasita, functie returneaza adresa acesteia,
+// altfel returneaza NULL
 TLG searchLen(TLG L, int len)
 {
     TLG p = L;
@@ -126,6 +149,9 @@ TLG searchLen(TLG L, int len)
     return NULL;
 }
 
+// Functie de cautare a unui cuvant. In cazul in care este gasit, i se
+// vor incrementa numarul de aparitii si functia va returna 1, altfel
+// va returna 0
 int searchWord(TLG L, char *str, int len)
 {
     TLG p = L;
@@ -145,6 +171,8 @@ int searchWord(TLG L, char *str, int len)
     return 0;
 }
 
+// Functie de sortare ce primeste ca parametrii o lista de cuvinte si un
+// pointer la o functie de comparare si sorteaza o lista de cuvinte
 void sortTLC(TLC L, int (*cmp)(void*, void*))
 {
     TLC p = L, q;
@@ -160,6 +188,7 @@ void sortTLC(TLC L, int (*cmp)(void*, void*))
     }
 }
 
+// Functie ce dezaloca memoria pentru o celula din lista de cuvinte
 void freeTCelulaC(TLC L)
 {
     free(((TLCuvant*)L->info)->cuv);
@@ -167,12 +196,14 @@ void freeTCelulaC(TLC L)
     free(L);
 }
 
+// Functie ce dezaloca memoria pentru o celula din lista ce contine lungimile
 void freeTCelulaG(TLG L)
 {
     freeTLC((TLC)L->info);
     free(L);
 }
 
+// Functie ce dezaloca memoria pentru lista de cuvinte
 void freeTLC(TLC L)
 {
     while (L) {
@@ -183,6 +214,7 @@ void freeTLC(TLC L)
     }
 }
 
+// Functie ce dezaloca memorie pentru lista ce contine lungimile
 void freeTLG(TLG L)
 {
     while (L) {
