@@ -1,0 +1,27 @@
+# Tema 1: Tabele Hash (105/85 puncte)
+## Dudu Matei-Ioan 313CB
+
+- Pentru implementarea acestei teme am utilizat 6 fisiere: main.c, THash.c, THash.h, TLG.c, TLG.h si Makefile.
+
+## main.c:
+- Acesta este fisierul main al temei;
+- Contine contine toate functiile care nu sunt specifice tabelei hash, respectiv listelor generice, precum: functiile de afisare, de comparare, de generare a codului hash si functia ce adauga '\0' la sfarsitul unui string ce se termina in '\n'. 
+- In functia main este generata tabela hash, dupa care se citeste linie cu linie continutul fisierului dat ca input pana cand este golit fisierul. Pe masura ce liniile sunt citite, instructiunile din acestea sunt decodificate si, pe urma, sunt accesate functiile specifice.
+
+## TLG.c:
+- Acest fisier contine toate functiile specifice tabelelor hash: de inserare cuvant, adaugare celula, aloca celula pentru cuvant si pentru lista, functie de cautare dupa lungime sau de cautare a unui cuvant, de sortare de lista si toate functiile de eliberare.
+
+## TLG.h:
+- Acest fisier contine toate bibliotecile folosite, definitiile structurilor utilizate in crearea listelor si prototipurile functiilor din fisierul "TLG.c".
+
+## THash.c:
+- Acest fisier contine functiile specifice tabelei hash, precum: functia de initializare a tabelei hash, de inserare a cuvintelor in tabela, de sortare si de eliberare a memoriei.
+
+## THash.h:
+- Acest fisier contine atat definitia structurii utilizate pentru tabela hash, cat si prototipurile functiilor anterior mentionate.
+
+## Makefile:
+#### Contine trei reguli:
+- build: compileaza programul si genereaza fisierul executabil denumit "tema1";
+- run: executa fisierul "tema1", avand ca dependinta regula build;
+- clean: sterge fisierul executabil generat.
